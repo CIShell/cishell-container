@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>cishell.library</groupId>
+		<groupId>org.cishell.library</groupId>
 		<artifactId>root-module</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>cishell.library</groupId>
+	<groupId>org.cishell.library</groupId>
 	<artifactId>cishellcontainer</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	
@@ -39,11 +39,6 @@
 			<version>1.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.cishell.core.libs</groupId>
-			<artifactId>osgi-core</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 			<version>5.0.0</version>
@@ -52,6 +47,11 @@
 			<groupId>cishell.library</groupId>
 			<artifactId>library</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.core.libs</groupId>
+			<artifactId>osgi-core</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.core</groupId>
@@ -70,6 +70,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<mainClass>org.cishell.container.CIShellContainer</mainClass>
+							<useUniqueVersions>false</useUniqueVersions>
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>
 					</archive>
