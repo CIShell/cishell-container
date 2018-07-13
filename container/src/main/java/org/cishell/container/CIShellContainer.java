@@ -15,6 +15,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.jar.Attributes;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
@@ -107,9 +108,11 @@ public class CIShellContainer {
 			BundleContext context = felix.getBundleContext();
 			List<Bundle> installedBundles = new ArrayList<Bundle>();
 
-			Manifest manifest = new Manifest(CIShellContainer.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
+			URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
+			URL url = cl.findResource("META-INF/MANIFEST.MF");
+			Manifest manifest = new Manifest(url.openStream());
+
 	      	String[] libs = ((String)manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH)).split(" ");
-	      	System.out.println(libs);
 	      	for (String lib : libs) {
 	      		if ((!lib.contains("lib/org.apache.felix.framework")) && (!lib.contains("animal-sniffer-annotations")) && (!lib.contains("org.osgi.core")) && (!lib.contains("xml"))) {
 	      			InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);

@@ -1,3 +1,8 @@
+# Java (Eclipse) Junk
+.classpath
+.project
+.settings/
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup
