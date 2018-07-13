@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.jar.Attributes;
+import java.net.URL;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
@@ -44,6 +47,11 @@ public class CIShellContainer {
 			}
 		}
 
+		CIShellContainer csc = new CIShellContainer(pluginsPath, propertyFileName);
+	}
+
+	public CIShellContainer(String pluginsPath, String propertyFileName){
+		
 		InputStream input = null;
 		if(pluginsPath == null) {
 			pluginsPath = "../plugins/";
@@ -99,18 +107,15 @@ public class CIShellContainer {
 			BundleContext context = felix.getBundleContext();
 			List<Bundle> installedBundles = new ArrayList<Bundle>();
 
-			JarFile jarFile = new JarFile("lib/library-1.0.0-SNAPSHOT.jar");
-			final Enumeration<JarEntry> entries = jarFile.entries();
-			while (entries.hasMoreElements()) {
-				final JarEntry entry = entries.nextElement();
-				if (entry.getName().contains(".jar")) {
-					JarEntry fileEntry = jarFile.getJarEntry(entry.getName());
-					System.out.println("Installing... "+entry.getName());
-					installedBundles.add(context.installBundle(entry.getName(),jarFile.getInputStream(fileEntry)));
-				}
-			}    
-
-			jarFile.close();
+			Manifest manifest = new Manifest(CIShellContainer.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
+	      	String[] libs = ((String)manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH)).split(" ");
+	      	System.out.println(libs);
+	      	for (String lib : libs) {
+	      		if ((!lib.contains("lib/org.apache.felix.framework")) && (!lib.contains("animal-sniffer-annotations")) && (!lib.contains("org.osgi.core")) && (!lib.contains("xml"))) {
+	      			InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);
+	      			installedBundles.add(context.installBundle(lib, libStream));	
+	      		}
+	      	}
 
 			for (Bundle b : felix.getBundleContext().getBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState()) ;
@@ -130,6 +135,9 @@ public class CIShellContainer {
 			}
 
 			System.out.println("Container Started...");
+
+			System.out.println(getLogService());
+
 		} catch (Exception ex){
 			System.err.println("Could not create framework: " + ex);
 			ex.printStackTrace();
@@ -143,7 +151,7 @@ public class CIShellContainer {
 		}
 	}
 
-	public static DataManagerService getDataManagerService() {
+	public  DataManagerService getDataManagerService() {
 		BundleContext context = felix.getBundleContext();
 		ServiceReference serviceReference = context.getServiceReference(DataManagerService.class.getName());
 		DataManagerService manager = null;
@@ -155,7 +163,7 @@ public class CIShellContainer {
 		return manager;
 	}
 
-	public static AlgorithmFactory getAlgorithmFactory(String pid) {
+	public  AlgorithmFactory getAlgorithmFactory(String pid) {
 		BundleContext context = felix.getBundleContext();
 		ServiceReference[] refs;
 
@@ -173,7 +181,7 @@ public class CIShellContainer {
 		return null;
 	}
 
-	public static LogService getLogService()  {
+	public  LogService getLogService()  {
 		BundleContext context = felix.getBundleContext();
 		ServiceReference ref = context.getServiceReference(LogService.class.getName());
 		LogService log = null;
@@ -183,12 +191,12 @@ public class CIShellContainer {
 		return log;
 	}
 
-	public static Bundle[] getInstalledBundles() {
+	public  Bundle[] getInstalledBundles() {
 		return activator.getBundles();
 	}
 
 
-	public static BundleContext getContext() {
+	public  BundleContext getContext() {
 		return activator.getbundleContext();
 	}
 
