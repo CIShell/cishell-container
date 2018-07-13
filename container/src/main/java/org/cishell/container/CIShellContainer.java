@@ -122,10 +122,11 @@ public class CIShellContainer {
 				b.start();
 			}
 
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			System.out.println("Installed Bundles: ") ;
 			for(Bundle b: getInstalledBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState()) ;
+				b.start();
 				if(b.getRegisteredServices()!=null) {
 					for(ServiceReference s : b.getRegisteredServices()) {
 						System.out.println("Services: "+s.toString());

@@ -15,7 +15,7 @@
 
   <modules>
   	<module>cishell</module>
-    <!-- <module>sci2</module> -->
+    <module>sci2</module>
   </modules>
 
 </project>
