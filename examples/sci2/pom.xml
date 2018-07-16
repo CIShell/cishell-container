@@ -309,32 +309,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.sci2.database.star.extract.network</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.sci2.database.star.extract.table</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.sci2.database.star.gui</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
 			<artifactId>edu.iu.sci2.database.star.load</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.plugins</groupId>
 			<artifactId>edu.iu.cns.database.extract.generic</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.cns.database.extract.queryrunner</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -365,11 +345,6 @@
 		<dependency>
 			<groupId>org.cishell.plugins</groupId>
 			<artifactId>edu.iu.sci2.database.medline</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.cns.graphstream.common</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -669,11 +644,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.sci2.filtering.topn</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
 			<artifactId>edu.iu.nwb.analysis.hits</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
@@ -795,16 +765,6 @@
 		<dependency>
 			<groupId>org.cishell.plugins</groupId>
 			<artifactId>edu.iu.sci2.visualization.temporalbargraph</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.cns.r</artifactId>
-			<version>2.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins</groupId>
-			<artifactId>edu.iu.nwb.visualization.network.gephi</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -1019,11 +979,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.plugins.libs</groupId>
-			<artifactId>org.apache.commons.lang</artifactId>
-			<version>2.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins.libs</groupId>
 			<artifactId>edu.iu.cns.lib.graphstream</artifactId>
 			<version>1.0.0</version>
 		</dependency>
@@ -1037,6 +992,51 @@
 			<artifactId>org.cishell.templates.database</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
+		<!-- 
+		TODO: These require eclipse  dependencies
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.cns.r</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.sci2.database.star.extract.network</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.sci2.database.star.gui</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.nwb.visualization.network.gephi</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.cns.database.extract.queryrunner</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.sci2.filtering.topn</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.sci2.database.star.extract.table</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+
+		 -->
 	</dependencies>
 	<build>
 		<plugins>
