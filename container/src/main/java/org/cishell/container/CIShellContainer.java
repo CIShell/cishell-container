@@ -43,18 +43,18 @@ requires a config.properties files to set the default plugins folder and file in
 
 public class CIShellContainer {
 
-	private static CIShellContainerActivator activator = null;
-	private static Felix felix = null;
+	private CIShellContainerActivator activator = null;
+	private Felix felix = null;
 
 	public CIShellContainer(String pluginsPath, String propertyFileName) {
 		
 		InputStream input = null;
-		if(pluginsPath == null) {
+		if (pluginsPath == null) {
 			pluginsPath = "./plugins/";
 		}
 		
 		try {
-			//load default config.properties
+			// load default config.properties
 			Properties prop = new Properties();
 			prop.load(CIShellContainer.class.getResourceAsStream("/config.properties"));
 			if(propertyFileName != null) {
@@ -103,7 +103,7 @@ public class CIShellContainer {
 			BundleContext context = felix.getBundleContext();
 			List<Bundle> installedBundles = new ArrayList<Bundle>();
 	
-			//Looks into the jars manifest folder to get the classpath jars and installs it one by one
+			// Looks into the jars manifest folder to get the classpath jars and installs it one by one
 			URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
 			URL url = cl.findResource("META-INF/MANIFEST.MF");
 			Manifest manifest = new Manifest(url.openStream());
@@ -208,8 +208,7 @@ public class CIShellContainer {
 	}
 
 	public void shutdownApplication() throws BundleException, InterruptedException {
-		// Shut down the felix framework when stopping the
-		// host application.
+		// Shut down the felix framework when stopping the host application.
 		felix.stop();
 		felix.waitForStop(0);
 	}
@@ -219,9 +218,9 @@ public class CIShellContainer {
 		String propertyFileName = null;
 
 		for(String s : args) {
-			if(s.contains(".properties")) {
+			if (s.contains(".properties")) {
 				propertyFileName = s;
-			}else {
+			} else {
 				pluginsPath = s; 
 			}
 		}
