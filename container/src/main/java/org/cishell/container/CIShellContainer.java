@@ -46,23 +46,7 @@ public class CIShellContainer {
 	private static CIShellContainerActivator activator = null;
 	private static Felix felix = null;
 
-	public static void main(String[] args) {
-
-		String pluginsPath = null;
-		String propertyFileName = null;
-
-		for(String s : args) {
-			if(s.contains(".properties")) {
-				propertyFileName = s;
-			}else {
-				pluginsPath = s; 
-			}
-		}
-
-		CIShellContainer csc = new CIShellContainer(pluginsPath, propertyFileName);
-	}
-
-	public CIShellContainer(String pluginsPath, String propertyFileName){
+	public CIShellContainer(String pluginsPath, String propertyFileName) {
 		
 		InputStream input = null;
 		if(pluginsPath == null) {
@@ -76,22 +60,22 @@ public class CIShellContainer {
 			if(propertyFileName != null) {
 				input = new FileInputStream(propertyFileName);
 				prop.load(input);
-			}else {
+			} else {
 				try {
 					input = new FileInputStream("config.properties");
 					prop.load(input);
-				}catch(Exception e) {
+				} catch(Exception e) {
 					System.out.println("No config.properties file found in folder!");
 				}
 			}
 			
-			if(prop.get("pluginsDir")!= null) {
+			if (prop.get("pluginsDir")!= null) {
 				pluginsPath = (String) prop.get("pluginsDir");
 			}
 			
-			if(new File(pluginsPath).exists()) {
+			if (new File(pluginsPath).exists()) {
 				System.out.println("Plugins directory: "+pluginsPath);
-			}else {
+			} else {
 				System.out.println("Plugins directory not found!");
 			}
 
@@ -118,7 +102,6 @@ public class CIShellContainer {
 
 			BundleContext context = felix.getBundleContext();
 			List<Bundle> installedBundles = new ArrayList<Bundle>();
-
 	
 			//Looks into the jars manifest folder to get the classpath jars and installs it one by one
 			URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
@@ -132,14 +115,14 @@ public class CIShellContainer {
 	      	}
 
 			for (Bundle b : felix.getBundleContext().getBundles()) {
-				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState()) ;
+				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState());
 				b.start();
 			}
 
 			Thread.sleep(15000);
-			System.out.println("Installed Bundles: ") ;
-			for(Bundle b: getInstalledBundles()) {
-				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState()) ;
+			System.out.println("Installed Bundles: ");
+			for (Bundle b: getInstalledBundles()) {
+				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState());
 				if(b.getRegisteredServices()!=null) {
 					for(ServiceReference s : b.getRegisteredServices()) {
 						System.out.println("Services: "+s.toString());
@@ -160,10 +143,10 @@ public class CIShellContainer {
 			System.out.println("* Test Algorithm (org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm): " + 
 				(this.getAlgorithmFactory("org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm") != null ? "installed" : "not installed"));
 
-		} catch (Exception ex){
+		} catch (Exception ex) {
 			System.err.println("Could not create framework: " + ex);
 			ex.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if(input!=null)
 					input.close();
@@ -173,9 +156,7 @@ public class CIShellContainer {
 		}
 	}
 
-	
-
-	public  AlgorithmFactory getAlgorithmFactory(String pid) {
+	public AlgorithmFactory getAlgorithmFactory(String pid) {
 		BundleContext context = felix.getBundleContext();
 		ServiceReference[] refs;
 
@@ -193,7 +174,6 @@ public class CIShellContainer {
 		return null;
 	}
 
-
 	public GUIBuilderService getGUIBuilderService() {
 		return (GUIBuilderService) this.getService(GUIBuilderService.class);
 	}
@@ -203,10 +183,10 @@ public class CIShellContainer {
 	public SchedulerService getSchedulerService() {
 		return (SchedulerService) this.getService(SchedulerService.class);
 	}
-	public  DataManagerService getDataManagerService() {
+	public DataManagerService getDataManagerService() {
 		return (DataManagerService) this.getService(DataManagerService.class);
 	}
-	public  LogService getLogService()  {
+	public LogService getLogService() {
 		return (LogService) this.getService(LogService.class);
 	}
 	public MetaTypeService getMetaTypeService() {
@@ -223,7 +203,7 @@ public class CIShellContainer {
 		return activator.getBundles();
 	}
 
-	public  BundleContext getContext() {
+	public  BundleContext getBundleContext() {
 		return activator.getbundleContext();
 	}
 
@@ -234,6 +214,18 @@ public class CIShellContainer {
 		felix.waitForStop(0);
 	}
 
+	public static void main(String[] args) {
+		String pluginsPath = null;
+		String propertyFileName = null;
+
+		for(String s : args) {
+			if(s.contains(".properties")) {
+				propertyFileName = s;
+			}else {
+				pluginsPath = s; 
+			}
+		}
+
+		CIShellContainer csc = new CIShellContainer(pluginsPath, propertyFileName);
+	}
 }
-
-
