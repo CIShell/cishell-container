@@ -13,6 +13,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 container/felix-cache/
+examples/sci2/felix-cache/
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar

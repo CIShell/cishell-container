@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
 	<parent>
 		<groupId>org.cishell.container</groupId>
 		<artifactId>examples</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	
 	<groupId>org.cishell.container</groupId>
 	<artifactId>org.cishell.container.sci2</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.cishell.core</groupId>
@@ -96,12 +93,22 @@
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.core.libs</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.core.libs</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cishell.core.libs</groupId>
 			<artifactId>joda-time</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.core.libs</groupId>
+			<artifactId>commons-pool</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
@@ -139,11 +146,7 @@
 			<artifactId>javabib.orig</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.cishell.plugins.libs</groupId>
-			<artifactId>jaxb_stax_jpa</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+		<!-- <dependency><groupId>org.cishell.plugins.libs</groupId><artifactId>jaxb_stax_jpa</artifactId><version>1.0.0</version></dependency>-->
 		<dependency>
 			<groupId>org.cishell.plugins.libs</groupId>
 			<artifactId>lucene</artifactId>
@@ -962,6 +965,76 @@
 		<dependency>
 			<groupId>org.cishell.plugins</groupId>
 			<artifactId>edu.iu.nwb.visualization.guess</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.core</groupId>
+			<artifactId>org.cishell.templates</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins.libs</groupId>
+			<artifactId>javaGeom</artifactId>
+			<version>0.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins.libs</groupId>
+			<artifactId>oim.vivo.scimapcore</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.sci2.medline</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.cns.graphstream.common</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins</groupId>
+			<artifactId>edu.iu.sci2.database.star.extract.common</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.reference.gui</groupId>
+			<artifactId>org.cishell.utility.swt</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.ui</groupId>
+			<artifactId>ide</artifactId>
+			<version>3.3.0-I20070620</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.swt.win32.win32</groupId>
+			<artifactId>x86</artifactId>
+			<version>3.3.0-v3346</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins.libs</groupId>
+			<artifactId>org.apache.commons.lang</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins.libs</groupId>
+			<artifactId>edu.iu.cns.lib.graphstream</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.plugins.libs</groupId>
+			<artifactId>bsh</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cishell.core</groupId>
+			<artifactId>org.cishell.templates.database</artifactId>
 			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

@@ -30,6 +30,11 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
 
 
+/*
+Default Plugins folder : ./plugins
+requires a config.properties files to set the default plugins folder and file install properties
+*/
+
 public class CIShellContainer {
 
 	private static CIShellContainerActivator activator = null;
@@ -55,10 +60,11 @@ public class CIShellContainer {
 		
 		InputStream input = null;
 		if(pluginsPath == null) {
-			pluginsPath = "../plugins/";
+			pluginsPath = "./plugins/";
 		}
 		
 		try {
+			//load default config.properties
 			Properties prop = new Properties();
 			prop.load(CIShellContainer.class.getResourceAsStream("/config.properties"));
 			if(propertyFileName != null) {
@@ -91,7 +97,6 @@ public class CIShellContainer {
 			Map<String, Object> config = new HashMap<String, Object>();
 			config.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
 			config.put("felix.fileinstall.poll", prop.get("poll"));
-			
 			config.put("felix.fileinstall.dir", pluginsPath);
 			config.put("ds.showtrace", prop.get("showtrace"));
 			config.put("ds.showerrors", prop.get("showerrors"));
@@ -108,16 +113,16 @@ public class CIShellContainer {
 			BundleContext context = felix.getBundleContext();
 			List<Bundle> installedBundles = new ArrayList<Bundle>();
 
+	
+			//Looks into the jars manifest folder to get the classpath jars and installs it one by one
 			URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
 			URL url = cl.findResource("META-INF/MANIFEST.MF");
 			Manifest manifest = new Manifest(url.openStream());
 
-	      	String[] libs = ((String)manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH)).split(" ");
+	      	String[] libs = ((String)manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH)).split(",");
 	      	for (String lib : libs) {
-	      		if ((!lib.contains("lib/org.apache.felix.framework")) && (!lib.contains("animal-sniffer-annotations")) && (!lib.contains("org.osgi.core")) && (!lib.contains("xml"))) {
-	      			InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);
-	      			installedBundles.add(context.installBundle(lib, libStream));	
-	      		}
+      			InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);
+      			installedBundles.add(context.installBundle(lib, libStream));	
 	      	}
 
 			for (Bundle b : felix.getBundleContext().getBundles()) {
@@ -129,7 +134,6 @@ public class CIShellContainer {
 			System.out.println("Installed Bundles: ") ;
 			for(Bundle b: getInstalledBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState()) ;
-				b.start();
 				if(b.getRegisteredServices()!=null) {
 					for(ServiceReference s : b.getRegisteredServices()) {
 						System.out.println("Services: "+s.toString());
