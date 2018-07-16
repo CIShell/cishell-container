@@ -5,7 +5,6 @@ Bundle-Version:${project.version}
 Bundle-Localization: plugin
 Main-Class: org.cishell.container.CIShellContainer
 Class-Path: lib/org.apache.felix.fileinstall-3.6.4.jar,\
- lib/org.apache.felix.framework-5.6.10.jar,\
  lib/org.apache.felix.log-1.0.1.jar,\
  lib/org.apache.felix.metatype-1.2.0.jar,\
  lib/org.osgi.compendium-5.0.0.jar
