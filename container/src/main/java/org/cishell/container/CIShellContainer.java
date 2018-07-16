@@ -19,8 +19,13 @@ import java.net.URLClassLoader;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
+
 import org.cishell.app.service.datamanager.DataManagerService;
+import org.cishell.app.service.scheduler.SchedulerService;
 import org.cishell.framework.algorithm.AlgorithmFactory;
+import org.cishell.service.conversion.DataConversionService;
+import org.cishell.service.guibuilder.GUIBuilderService;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -28,6 +33,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
+import org.osgi.service.metatype.MetaTypeService;
 
 
 /*
@@ -142,9 +148,17 @@ public class CIShellContainer {
 				}
 			}
 
-			System.out.println("Container Started...");
+			System.out.println("Container Started...\n");
 
-			System.out.println(getLogService());
+			System.out.println("CIShell Services Installed:");
+			System.out.println("* Data Manager: " + (this.getDataManagerService() != null ? "installed" : "not installed"));
+			System.out.println("* Scheduler Service: " + (this.getSchedulerService() != null ? "installed" : "not installed"));
+			System.out.println("* Data Conversion Service: " + (this.getDataConversionService() != null ? "installed" : "not installed"));
+			System.out.println("* GUI Builder Service: " + (this.getGUIBuilderService() != null ? "installed" : "not installed"));
+			System.out.println("* Log Service: " + (this.getLogService() != null ? "installed" : "not installed"));
+			System.out.println("* MetaType Service: " + (this.getMetaTypeService() != null ? "installed" : "not installed"));
+			System.out.println("* Test Algorithm (org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm): " + 
+				(this.getAlgorithmFactory("org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm") != null ? "installed" : "not installed"));
 
 		} catch (Exception ex){
 			System.err.println("Could not create framework: " + ex);
@@ -159,17 +173,7 @@ public class CIShellContainer {
 		}
 	}
 
-	public  DataManagerService getDataManagerService() {
-		BundleContext context = felix.getBundleContext();
-		ServiceReference serviceReference = context.getServiceReference(DataManagerService.class.getName());
-		DataManagerService manager = null;
-		
-		if (serviceReference != null) {
-			manager = (DataManagerService) context.getService(serviceReference);
-		}
-
-		return manager;
-	}
+	
 
 	public  AlgorithmFactory getAlgorithmFactory(String pid) {
 		BundleContext context = felix.getBundleContext();
@@ -189,20 +193,35 @@ public class CIShellContainer {
 		return null;
 	}
 
+
+	public GUIBuilderService getGUIBuilderService() {
+		return (GUIBuilderService) this.getService(GUIBuilderService.class);
+	}
+	public DataConversionService getDataConversionService() {
+		return (DataConversionService) this.getService(DataConversionService.class);
+	}
+	public SchedulerService getSchedulerService() {
+		return (SchedulerService) this.getService(SchedulerService.class);
+	}
+	public  DataManagerService getDataManagerService() {
+		return (DataManagerService) this.getService(DataManagerService.class);
+	}
 	public  LogService getLogService()  {
+		return (LogService) this.getService(LogService.class);
+	}
+	public MetaTypeService getMetaTypeService() {
+		return (MetaTypeService) this.getService(MetaTypeService.class);
+	}
+
+	public Object getService(Class c) {
 		BundleContext context = felix.getBundleContext();
-		ServiceReference ref = context.getServiceReference(LogService.class.getName());
-		LogService log = null;
-		if (ref != null){
-			log = (LogService) context.getService(ref);
-		}
-		return log;
+		ServiceReference ref = context.getServiceReference(c.getName());
+		return ref != null ? context.getService(ref) : null;
 	}
 
 	public  Bundle[] getInstalledBundles() {
 		return activator.getBundles();
 	}
-
 
 	public  BundleContext getContext() {
 		return activator.getbundleContext();
