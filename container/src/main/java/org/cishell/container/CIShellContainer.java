@@ -92,6 +92,7 @@ public class CIShellContainer {
 			config.put("ds.showerrors", prop.get("showerrors"));
 			config.put("felix.fileinstall.bundles.startTransient",prop.get("startTransient"));
 			config.put("felix.fileinstall.bundles.new.start", prop.get("start"));
+			config.put("org.osgi.framework.bootdelegation", "sun.*,com.sun.*");
 			config.put("felix.fileinstall.noInitialDelay", prop.get("noInitialDelay"));
 			config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, prop.get("systempackages"));
 			config.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
@@ -116,13 +117,16 @@ public class CIShellContainer {
 
 			for (Bundle b : felix.getBundleContext().getBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState());
-				b.start();
+				if(!b.getSymbolicName().equals("javax.servlet-api"))
+					b.start();
 			}
 
 			Thread.sleep(15000);
 			System.out.println("Installed Bundles: ");
 			for (Bundle b: getInstalledBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState());
+				if(!b.getSymbolicName().equals("javax.servlet-api"))
+					b.start();
 				if(b.getRegisteredServices()!=null) {
 					for(ServiceReference s : b.getRegisteredServices()) {
 						System.out.println("Services: "+s.toString());
