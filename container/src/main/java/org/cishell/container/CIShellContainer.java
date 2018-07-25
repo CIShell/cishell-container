@@ -49,6 +49,8 @@ public class CIShellContainer {
 	public CIShellContainer(String pluginsPath, String propertyFileName) {
 		
 		InputStream input = null;
+		int timeout = 5000;
+
 		if (pluginsPath == null) {
 			pluginsPath = "./plugins/";
 		}
@@ -57,7 +59,7 @@ public class CIShellContainer {
 			// load default config.properties
 			Properties prop = new Properties();
 			prop.load(CIShellContainer.class.getResourceAsStream("/config.properties"));
-			if(propertyFileName != null) {
+			if (propertyFileName != null) {
 				input = new FileInputStream(propertyFileName);
 				prop.load(input);
 			} else {
@@ -92,7 +94,6 @@ public class CIShellContainer {
 			config.put("ds.showerrors", prop.get("showerrors"));
 			config.put("felix.fileinstall.bundles.startTransient",prop.get("startTransient"));
 			config.put("felix.fileinstall.bundles.new.start", prop.get("start"));
-			config.put("org.osgi.framework.bootdelegation", "sun.*,com.sun.*");
 			config.put("felix.fileinstall.noInitialDelay", prop.get("noInitialDelay"));
 			config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, prop.get("systempackages"));
 			config.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
@@ -103,32 +104,34 @@ public class CIShellContainer {
 
 			BundleContext context = felix.getBundleContext();
 			List<Bundle> installedBundles = new ArrayList<Bundle>();
-	
-			// Looks into the jars manifest folder to get the classpath jars and installs it one by one
-			URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
-			URL url = cl.findResource("META-INF/MANIFEST.MF");
-			Manifest manifest = new Manifest(url.openStream());
 
-	      	String[] libs = ((String)manifest.getMainAttributes().get(Attributes.Name.CLASS_PATH)).split(",");
-	      	for (String lib : libs) {
-      			InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);
-      			installedBundles.add(context.installBundle(lib, libStream));	
+			if (prop.get("installbundles") == null){
+				System.out.println("Please add the required bundles in the property file under key : installbundles");
+			} else {
+		      	String[] libs = prop.get("installbundles").toString().split(",");
+		      	for (String lib : libs) {
+	      			InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);
+	      			installedBundles.add(context.installBundle(lib, libStream));	
+		      	}
 	      	}
 
 			for (Bundle b : felix.getBundleContext().getBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState());
-				if(!b.getSymbolicName().equals("javax.servlet-api"))
-					b.start();
+				b.start();
 			}
 
-			Thread.sleep(15000);
+			if (prop.get("sleep") != null){
+				timeout = Integer.valueOf(prop.get("sleep").toString());
+			}
+
+			System.out.println("");
+			System.out.println("Waiting(secs)... : "+timeout);
+			Thread.sleep(timeout);
 			System.out.println("Installed Bundles: ");
 			for (Bundle b: getInstalledBundles()) {
 				System.out.println(b.getSymbolicName()+" : "+"State="+b.getState());
-				if(!b.getSymbolicName().equals("javax.servlet-api"))
-					b.start();
-				if(b.getRegisteredServices()!=null) {
-					for(ServiceReference s : b.getRegisteredServices()) {
+				if (b.getRegisteredServices()!=null) {
+					for (ServiceReference s : b.getRegisteredServices()) {
 						System.out.println("Services: "+s.toString());
 
 					}
@@ -152,7 +155,7 @@ public class CIShellContainer {
 			ex.printStackTrace();
 		} finally {
 			try {
-				if(input!=null)
+				if (input!=null)
 					input.close();
 			} catch (IOException e) {
 				e.printStackTrace();

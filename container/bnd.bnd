@@ -9,7 +9,4 @@ Class-Path: lib/org.apache.felix.fileinstall-3.6.4.jar,\
  lib/org.apache.felix.log-1.0.1.jar,\
  lib/org.apache.felix.metatype-1.2.0.jar,\
  lib/org.osgi.compendium-5.0.0.jar,\
- lib/org.cishell.framework-2.1.0-SNAPSHOT.jar,\
- lib/org.apache.felix.http.servlet-api-1.1.2.jar,\
- lib/org.apache.felix.http.jetty-4.0.0.jar,\
- lib/org.apache.felix.http.whiteboard-4.0.0.jar
+ lib/org.cishell.framework-2.1.0-SNAPSHOT.jar
