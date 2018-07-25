@@ -133,14 +133,11 @@ public class CIShellContainer {
 				if (b.getRegisteredServices()!=null) {
 					for (ServiceReference s : b.getRegisteredServices()) {
 						System.out.println("Services: "+s.toString());
-
 					}
 				}
 			}
 
-			System.out.println("Container Started...\n");
-
-			System.out.println("CIShell Services Installed:");
+			System.out.println("\nCIShell Services Installed:\n");
 			System.out.println("* Data Manager: " + (this.getDataManagerService() != null ? "installed" : "not installed"));
 			System.out.println("* Scheduler Service: " + (this.getSchedulerService() != null ? "installed" : "not installed"));
 			System.out.println("* Data Conversion Service: " + (this.getDataConversionService() != null ? "installed" : "not installed"));
@@ -150,6 +147,7 @@ public class CIShellContainer {
 			System.out.println("* Test Algorithm (org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm): " + 
 				(this.getAlgorithmFactory("org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm") != null ? "installed" : "not installed"));
 
+			System.out.println("\nContainer Started...");
 		} catch (Exception ex) {
 			System.err.println("Could not create framework: " + ex);
 			ex.printStackTrace();
