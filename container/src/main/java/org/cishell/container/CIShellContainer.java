@@ -97,6 +97,8 @@ public class CIShellContainer {
 			config.put("felix.fileinstall.noInitialDelay", prop.get("noInitialDelay"));
 			config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, prop.get("systempackages"));
 			config.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
+			config.put("org.apache.felix.http.jettyEnabled", "true");
+			config.put("org.apache.felix.http.debug", "true");
 
 			felix = new Felix(config);
 			felix.init();
