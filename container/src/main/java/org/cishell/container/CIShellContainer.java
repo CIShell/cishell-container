@@ -95,6 +95,7 @@ public class CIShellContainer {
 			config.put("felix.fileinstall.bundles.startTransient",prop.get("startTransient"));
 			config.put("felix.fileinstall.bundles.new.start", prop.get("start"));
 			config.put("felix.fileinstall.noInitialDelay", prop.get("noInitialDelay"));
+			config.put("org.osgi.framework.bootdelegation", "sun.*");
 			config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, prop.get("systempackages"));
 			config.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
 			config.put("org.apache.felix.http.jettyEnabled", "true");
