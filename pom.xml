@@ -8,8 +8,8 @@
  
   <modules>
     <!-- <module>all-jar</module> -->
-    <module>container</module>
     <module>examples</module>
+    <module>container</module>
   </modules>
 
 
