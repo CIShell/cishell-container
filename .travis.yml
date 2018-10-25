@@ -4,4 +4,4 @@ cache:
   directories:
     - $HOME/.m2
 install: cp .travis.settings.xml $HOME/.m2/settings.xml
-script: mvn clean deploy
+script: mvn --quiet deploy
