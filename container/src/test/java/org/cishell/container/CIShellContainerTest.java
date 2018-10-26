@@ -1,5 +1,6 @@
 package org.cishell.container;
 
+import org.cishell.framework.algorithm.AlgorithmFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,8 +10,6 @@ import org.osgi.framework.BundleException;
 public class CIShellContainerTest {
 
     private CIShellContainer cishellContainer;
-    private static final String CONVERTERGRAPH_ALGORITHM = "org.cishell.algorithm.convertergraph.ConverterGraphAlgorithm";
-
 
     @Before
     public void setup() {
@@ -19,21 +18,13 @@ public class CIShellContainerTest {
 
     @Test
     public void CIShellServicesInstalled() throws InterruptedException {
-        int ticks = 10;
-        while (ticks-- > 0) {
-            if (cishellContainer.getAlgorithmFactory(CONVERTERGRAPH_ALGORITHM) != null) {
-                break;
-            }
-            Thread.sleep(500);
-        }
-
         Assert.assertNotNull(cishellContainer.getDataManagerService());
         Assert.assertNotNull(cishellContainer.getSchedulerService());
         Assert.assertNotNull(cishellContainer.getDataConversionService());
         //Assert.assertNotNull(cishellContainer.getGUIBuilderService());
         Assert.assertNotNull(cishellContainer.getLogService());
         Assert.assertNotNull(cishellContainer.getMetaTypeService());
-        Assert.assertNotNull(cishellContainer.getAlgorithmFactory(CONVERTERGRAPH_ALGORITHM));
+        Assert.assertNotNull(cishellContainer.waitAndGetService(AlgorithmFactory.class));
     }
 
     @After
