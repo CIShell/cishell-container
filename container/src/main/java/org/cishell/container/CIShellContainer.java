@@ -171,7 +171,7 @@ public class CIShellContainer {
         return new Builder();
     }
 
-    static class Builder {
+    public static class Builder {
         private String configPropertiesPath = null;
         private String pluginsDirectoryPath = null;
         private boolean debugMode = false;
