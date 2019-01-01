@@ -1,6 +1,5 @@
 package org.cishell.container;
 
-import org.cishell.framework.algorithm.AlgorithmFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,18 +12,17 @@ public class CIShellContainerTest {
 
     @Before
     public void setup() {
-        cishellContainer = new CIShellContainer("../examples/cishell/target/plugins/", null);
+        cishellContainer = CIShellContainer.getBuilder().pluginsDirectoryPath("../examples/cishell/target/plugins/").build();
     }
 
     @Test
-    public void CIShellServicesInstalled() throws InterruptedException {
+    public void CIShellServicesInstalled() {
         Assert.assertNotNull(cishellContainer.getDataManagerService());
         Assert.assertNotNull(cishellContainer.getSchedulerService());
         Assert.assertNotNull(cishellContainer.getDataConversionService());
         //Assert.assertNotNull(cishellContainer.getGUIBuilderService());
         Assert.assertNotNull(cishellContainer.getLogService());
         Assert.assertNotNull(cishellContainer.getMetaTypeService());
-        Assert.assertNotNull(cishellContainer.waitAndGetService(AlgorithmFactory.class));
     }
 
     @After

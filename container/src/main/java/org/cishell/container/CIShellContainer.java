@@ -11,11 +11,10 @@ import org.osgi.framework.*;
 import org.osgi.service.log.LogService;
 import org.osgi.service.metatype.MetaTypeService;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /*
@@ -25,82 +24,34 @@ requires a config.properties files to set the default plugins folder and file in
 
 public class CIShellContainer {
 
-    private String pluginsDirPath = null;
     private CIShellContainerActivator activator = null;
     private Felix felix = null;
-    private Map<String, Object> felixConfig = new HashMap<String, Object>();
-    private boolean debugMode;
-    private int timeoutPeriod;
-    private int tickTime;
 
-    private static final String ASCII_ART =
-            "\n   _______________ __         ____   ______            __        _                " +
-                    "\n  / ____/  _/ ___// /_  ___  / / /  / ____/___  ____  / /_____ _(_)___  ___  _____" +
-                    "\n / /    / / \\__ \\/ __ \\/ _ \\/ / /  / /   / __ \\/ __ \\/ __/ __ `/ / __ \\/ _ \\/ ___/" +
-                    "\n/ /____/ / ___/ / / / /  __/ / /  / /___/ /_/ / / / / /_/ /_/ / / / / /  __/ /    " +
-                    "\n\\____/___//____/_/ /_/\\___/_/_/   \\____/\\____/_/ /_/\\__/\\__,_/_/_/ /_/\\___/_/     \n";
-
-    public CIShellContainer() {
-        this(null, null, false);
-    }
-
-    public CIShellContainer(String pluginsDirPath, String configPropertiesPath) {
-        this(pluginsDirPath, configPropertiesPath, false);
-    }
-
-    private CIShellContainer(String pluginsDirPath, String configPropertiesPath, boolean debugMode) {
-
-        this.debugMode = debugMode;
-        InputStream inputStream = null;
+    private CIShellContainer(String configPropertiesPath, String pluginsDirectoryPath, boolean debugMode) {
 
         try {
-            //load default config.properties
-            Properties properties = new Properties();
-
-            if (configPropertiesPath != null) {
-                inputStream = new FileInputStream(configPropertiesPath);
-                System.out.println("Loading configurations from : " + configPropertiesPath);
-                properties.load(inputStream);
-            } else {
-                properties.load(CIShellContainer.class.getResourceAsStream("/config.properties"));
-                System.out.println("Loading configurations from : /config.properties");
-            }
-
-            //load configurations from the properties file
-            loadConfigurations(properties);
-
-            //if plugins directory was not specified from both command line and config.properties file,
-            //then set the default path
-            if (pluginsDirPath == null) {
-                pluginsDirPath = "plugins/";
-            }
-
-            System.out.println("Loading plugins from : " + pluginsDirPath);
-
-            if (!new File(pluginsDirPath).exists()) {
-                System.out.println("Plugins directory not found!");
-            }
+            Configurations configurations = new Configurations(configPropertiesPath, pluginsDirectoryPath, debugMode);
 
             //start building felix framework
             List<CIShellContainerActivator> list = new ArrayList<CIShellContainerActivator>();
             activator = new CIShellContainerActivator();
             list.add(activator);
 
-            felixConfig.put("felix.fileinstall.dir", pluginsDirPath);
-            felixConfig.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
+            Map<String, Object> felixConfigurations = configurations.getFelixConfigurations();
+            felixConfigurations.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
 
             //start felix
             System.out.println("Starting OSGi Framework...");
-            felix = new Felix(felixConfig);
+            felix = new Felix(felixConfigurations);
             felix.init();
             felix.start();
 
             BundleContext context = felix.getBundleContext();
 
-            if (properties.get("installbundles") == null) {
+            if (configurations.getConfigProperties().get("installbundles") == null) {
                 System.out.println("Please add the required bundles in the config properties file against key : installbundles");
             } else {
-                String[] libs = properties.get("installbundles").toString().split(",");
+                String[] libs = configurations.getConfigProperties().get("installbundles").toString().split(",");
                 for (String lib : libs) {
                     InputStream libStream = CIShellContainer.class.getResourceAsStream("/" + lib);
                     context.installBundle(lib, libStream);
@@ -111,7 +62,7 @@ public class CIShellContainer {
                 b.start();
             }
 
-            int ticks = timeoutPeriod / tickTime;
+            int ticks = configurations.getTimeoutPeriod() / configurations.getTickTime();
             while (ticks-- > 0) {
                 if (getDataManagerService() != null &&
                         getSchedulerService() != null &&
@@ -122,10 +73,10 @@ public class CIShellContainer {
                 ) {
                     break;
                 }
-                Thread.sleep(tickTime);
+                Thread.sleep(configurations.getTickTime());
             }
 
-            System.out.println(ASCII_ART);
+            System.out.println(Configurations.ASCII_ART);
 
             if (debugMode) {
                 System.out.println("\nInstalled Bundles: ");
@@ -151,15 +102,7 @@ public class CIShellContainer {
             System.out.println();
 
         } catch (Exception ex) {
-            System.err.println("Could not create framework: " + ex);
-            ex.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null)
-                    inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            System.err.println("Failed to start felix framework\n" + ex);
         }
     }
 
@@ -224,45 +167,32 @@ public class CIShellContainer {
         felix.waitForStop(0);
     }
 
-    public Object waitAndGetService(Class c) throws InterruptedException {
-        int ticks = timeoutPeriod / tickTime;
-        ServiceReference serviceRef = null;
-        while (ticks-- > 0) {
-            if (getBundleContext().getServiceReference(c.getName()) != null) {
-                serviceRef = getBundleContext().getServiceReference(c.getName());
-                break;
-            }
-            Thread.sleep(tickTime);
-        }
-
-        return serviceRef != null ? getBundleContext().getService(serviceRef) : null;
+    public static Builder getBuilder() {
+        return new Builder();
     }
 
-    private void loadConfigurations(Properties properties) {
-        //if plugins directory was not specified from command line, set it from config.properties file
-        if (pluginsDirPath == null && properties.get("pluginsDir") != null) {
-            pluginsDirPath = (String) properties.get("pluginsDir");
+    static class Builder {
+        private String configPropertiesPath = null;
+        private String pluginsDirectoryPath = null;
+        private boolean debugMode = false;
+
+        public Builder configPropertiesPath(final String configPropertiesPath) {
+            this.configPropertiesPath = configPropertiesPath;
+            return this;
         }
 
-        timeoutPeriod = properties.get("timeoutPeriod") != null ? Integer.parseInt(properties.get("timeoutPeriod").toString()) : 20000;
-        tickTime = properties.get("tickTime") != null ? Integer.parseInt(properties.get("tickTime").toString()) : 200;
+        public Builder pluginsDirectoryPath(final String pluginsDirectoryPath) {
+            this.pluginsDirectoryPath = pluginsDirectoryPath;
+            return this;
+        }
 
-        //load felix configurations
-        felixConfig.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-        felixConfig.put("felix.fileinstall.poll", properties.get("poll"));
-        felixConfig.put("ds.showerrors", properties.get("showerrors"));
-        felixConfig.put("felix.fileinstall.bundles.startTransient", properties.get("startTransient"));
-        felixConfig.put("felix.fileinstall.bundles.new.start", properties.get("start"));
-        felixConfig.put("felix.fileinstall.noInitialDelay", properties.get("noInitialDelay"));
-        felixConfig.put("org.osgi.framework.bootdelegation", "sun.*");
-        felixConfig.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, properties.get("systempackages"));
-        felixConfig.put("org.apache.felix.http.jettyEnabled", "true");
-        felixConfig.put("org.apache.felix.http.whiteboardEnabled", "true");
-        felixConfig.put("org.apache.felix.http.enable", "true");
-        felixConfig.put("org.apache.felix.http.mbeans", "true");
-        if (debugMode) {
-            felixConfig.put("ds.showtrace", properties.get("showtrace"));
-            felixConfig.put("org.apache.felix.http.debugMode", "true");
+        public Builder debugMode(final boolean debugMode) {
+            this.debugMode = debugMode;
+            return this;
+        }
+
+        public CIShellContainer build() {
+            return new CIShellContainer(configPropertiesPath, pluginsDirectoryPath, debugMode);
         }
     }
 
@@ -282,6 +212,6 @@ public class CIShellContainer {
             }
         }
 
-        CIShellContainer ciShellContainer = new CIShellContainer(pluginsPath, propertyFilePath, debugMode);
+        new CIShellContainer(propertyFilePath, pluginsPath, debugMode);
     }
 }
