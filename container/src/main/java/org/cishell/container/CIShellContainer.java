@@ -186,8 +186,8 @@ public class CIShellContainer {
             return this;
         }
 
-        public Builder debugMode(final boolean debugMode) {
-            this.debugMode = debugMode;
+        public Builder inDebugMode() {
+            this.debugMode = true;
             return this;
         }
 

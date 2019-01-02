@@ -25,7 +25,7 @@ class Configurations {
 
     Configurations(String configPropertiesPath, String pluginsDirectoryPath, boolean debugMode) throws IOException {
         this.debugMode = debugMode;
-        System.out.println("Debug mode is " + (debugMode ? "ON" : "OFF"));
+        System.out.println("Debug mode " + (debugMode ? "ON" : "OFF"));
 
         //load default config.configProperties
         if (configPropertiesPath != null) {
