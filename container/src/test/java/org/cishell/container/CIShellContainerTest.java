@@ -1,10 +1,11 @@
 package org.cishell.container;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.BundleException;
+
+import static org.junit.Assert.assertNotNull;
 
 public class CIShellContainerTest {
 
@@ -17,12 +18,12 @@ public class CIShellContainerTest {
 
     @Test
     public void CIShellServicesInstalled() {
-        Assert.assertNotNull(cishellContainer.getDataManagerService());
-        Assert.assertNotNull(cishellContainer.getSchedulerService());
-        Assert.assertNotNull(cishellContainer.getDataConversionService());
-        //Assert.assertNotNull(cishellContainer.getGUIBuilderService());
-        Assert.assertNotNull(cishellContainer.getLogService());
-        Assert.assertNotNull(cishellContainer.getMetaTypeService());
+        assertNotNull(cishellContainer.getDataManagerService());
+        assertNotNull(cishellContainer.getSchedulerService());
+        assertNotNull(cishellContainer.getDataConversionService());
+        //assertNotNull(cishellContainer.getGUIBuilderService());
+        assertNotNull(cishellContainer.getLogService());
+        assertNotNull(cishellContainer.getMetaTypeService());
     }
 
     @After
