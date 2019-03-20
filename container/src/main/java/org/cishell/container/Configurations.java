@@ -76,6 +76,7 @@ class Configurations {
         felixConfigurations.put("org.osgi.framework.bootdelegation", "sun.*");
         felixConfigurations.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, configProperties.get("systempackages"));
         felixConfigurations.put("org.apache.felix.http.jettyEnabled", "true");
+        felixConfigurations.put("org.apache.felix.http.whiteboardEnabled", "false");
         felixConfigurations.put("org.apache.felix.http.enable", "true");
         felixConfigurations.put("org.apache.felix.http.mbeans", "true");
         if (debugMode) {
