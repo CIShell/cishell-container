@@ -13,6 +13,7 @@ import org.osgi.service.metatype.MetaTypeService;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -84,8 +85,8 @@ public class CIShellContainer {
                     System.out.println(b.getSymbolicName() + " : " + "State=" + b.getState());
                     if (b.getRegisteredServices() != null) {
                         System.out.println("\tRegistered Services: ");
-                        for (ServiceReference s : b.getRegisteredServices()) {
-                            System.out.println("\t* " + s.toString());
+                        for (ServiceReference serviceReference : b.getRegisteredServices()) {
+                            System.out.println("\t* " + serviceReference.toString());
                         }
                     }
                 }
@@ -109,11 +110,11 @@ public class CIShellContainer {
     public AlgorithmFactory getAlgorithmFactory(String pid) {
 
         try {
-            ServiceReference[] refs = getBundleContext().getServiceReferences(AlgorithmFactory.class.getName(),
+            Collection<ServiceReference<AlgorithmFactory>> serviceReferences = getBundleContext().getServiceReferences(AlgorithmFactory.class,
                     "(&(" + Constants.SERVICE_PID + "=" + pid + "))");
 
-            if (refs != null && refs.length > 0) {
-                return (AlgorithmFactory) getBundleContext().getService(refs[0]);
+            if (serviceReferences != null && serviceReferences.size() > 0) {
+                return getBundleContext().getService(serviceReferences.iterator().next());
             }
 
         } catch (InvalidSyntaxException e) {
@@ -124,33 +125,33 @@ public class CIShellContainer {
     }
 
     public GUIBuilderService getGUIBuilderService() {
-        return (GUIBuilderService) this.getService(GUIBuilderService.class);
+        return getService(GUIBuilderService.class);
     }
 
     public DataConversionService getDataConversionService() {
-        return (DataConversionService) this.getService(DataConversionService.class);
+        return getService(DataConversionService.class);
     }
 
     public SchedulerService getSchedulerService() {
-        return (SchedulerService) this.getService(SchedulerService.class);
+        return getService(SchedulerService.class);
     }
 
     public DataManagerService getDataManagerService() {
-        return (DataManagerService) this.getService(DataManagerService.class);
+        return getService(DataManagerService.class);
     }
 
     public LogService getLogService() {
-        return (LogService) this.getService(LogService.class);
+        return getService(LogService.class);
     }
 
     public MetaTypeService getMetaTypeService() {
-        return (MetaTypeService) this.getService(MetaTypeService.class);
+        return getService(MetaTypeService.class);
     }
 
-    public Object getService(Class c) {
+    public <S> S getService(Class<S> clazz) {
         BundleContext context = felix.getBundleContext();
-        ServiceReference ref = context.getServiceReference(c.getName());
-        return ref != null ? context.getService(ref) : null;
+        ServiceReference<S> serviceReference = context.getServiceReference(clazz);
+        return serviceReference != null ? context.getService(serviceReference) : null;
     }
 
     public Bundle[] getInstalledBundles() {
